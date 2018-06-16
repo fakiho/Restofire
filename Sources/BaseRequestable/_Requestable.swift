@@ -3,7 +3,7 @@
 //  Restofire
 //
 //  Created by Rahul Katariya on 24/03/16.
-//  Copyright © 2016 AarKay. All rights reserved.
+//  Copyright © 2015-present Restofire. All rights reserved.
 //
 
 import Foundation
@@ -39,7 +39,7 @@ public extension _Requestable {
     
     public var urlRequest: URLRequest {
         let url = [scheme + host, version, path]
-            .flatMap { $0 }
+            .compactMap { $0 }
             .joined(separator: "/")
         
         let allHeaders = headers + configuration.headers

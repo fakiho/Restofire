@@ -3,7 +3,7 @@
 //  Restofire
 //
 //  Created by Rahul Katariya on 02/01/18.
-//  Copyright © 2018 AarKay. All rights reserved.
+//  Copyright © 2015-present Restofire. All rights reserved.
 //
 
 import Alamofire
