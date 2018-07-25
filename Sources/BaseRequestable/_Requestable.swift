@@ -18,10 +18,13 @@ import Foundation
 ///
 /// }
 /// ```
-public protocol _Requestable: _Configurable {
+public protocol _Requestable: _Configurable, RequestDelegate {
     
     /// The path relative to base URL.
     var path: String? { get }
+    
+    /// The request delegates.
+    var delegates: [RequestDelegate] { get }
     
 }
 
@@ -30,6 +33,11 @@ public extension _Requestable {
     /// `nil`
     public var path: String? {
         return nil
+    }
+    
+    /// `empty`
+    public var delegates: [RequestDelegate] {
+        return configuration.requestDelegates
     }
     
 }

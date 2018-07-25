@@ -67,7 +67,7 @@ class RestofireRequest {
         request.authenticate(usingCredential: credential)
     }
     
-    internal static func prepare<R: AConfigurable>(_ request: URLRequest, requestable: R) -> URLRequest {
+    internal static func prepare<R: _Requestable>(_ request: URLRequest, requestable: R) -> URLRequest {
         var request = request
         request = requestable.prepare(request, requestable: requestable)
         requestable.delegates.forEach {
@@ -76,7 +76,7 @@ class RestofireRequest {
         return request
     }
     
-    internal static func didSend<R: AConfigurable>(_ request: Request, requestable: R) {
+    internal static func didSend<R: _Requestable>(_ request: Request, requestable: R) {
         requestable.didSend(request, requestable: requestable)
         requestable.delegates.forEach {
             $0.didSend(request, requestable: requestable)
