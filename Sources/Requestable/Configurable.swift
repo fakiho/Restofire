@@ -25,7 +25,16 @@ import Foundation
 ///
 /// }
 /// ```
-public protocol Configurable: AConfigurable, Reachable, Retryable, Queueable {
+public protocol Configurable: _Configurable, Authenticable, SessionManagable, Validatable, Reachable, Retryable, Queueable {
+    
+    /// The credential.
+    var credential: URLCredential? { get }
+    
+    /// The acceptable status codes.
+    var acceptableStatusCodes: [Int]? { get }
+    
+    /// The acceptable content types.
+    var acceptableContentTypes: [String]? { get }
     
     #if !os(watchOS)
     /// The waitsForConnectivity.
@@ -51,6 +60,21 @@ public protocol Configurable: AConfigurable, Reachable, Retryable, Queueable {
 
 // MARK: - Default Implementation
 public extension Configurable {
+    
+    /// `nil`
+    public var credential: URLCredential? {
+        return authentication.credential
+    }
+    
+    /// `nil`
+    public var acceptableStatusCodes: [Int]? {
+        return validation.acceptableStatusCodes
+    }
+    
+    /// `nil`
+    public var acceptableContentTypes: [String]? {
+        return validation.acceptableContentTypes
+    }
     
     #if !os(watchOS)
     /// `Reachability.default.waitsForConnectivity`

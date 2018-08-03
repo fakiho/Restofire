@@ -46,6 +46,9 @@ public struct Configuration {
     /// The request delegates. `empty` by default.
     public var requestDelegates: [RequestDelegate] = []
     
+    /// The request delegates. `empty` by default.
+    public var downloadDelegates: [DownloadDelegate] = []
+    
     /// `Configuration` Intializer
     ///
     /// - returns: new `Configuration` object

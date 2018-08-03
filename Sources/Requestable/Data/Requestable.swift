@@ -18,8 +18,11 @@ import Foundation
 ///
 /// }
 /// ```
-public protocol Requestable: ARequestable, Configurable, DataResponseSerializable {
+public protocol Requestable: BaseRequestable, DataResponseSerializable {
 
+    /// The Alamofire data request validation.
+    var validationBlock: DataRequest.Validation? { get }
+    
     /// Called when the Request succeeds.
     ///
     /// - parameter request: The Alamofire.DataRequest
@@ -35,6 +38,20 @@ public protocol Requestable: ARequestable, Configurable, DataResponseSerializabl
 }
 
 public extension Requestable {
+    
+    /// `Validation.default.dataValidation`
+    public var validationBlock: DataRequest.Validation? {
+        return validation.dataValidation
+    }
+    
+    /// Creates a `DataRequest` to retrieve the contents of a URL based on the specified `Requestable`
+    ///
+    /// If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
+    ///
+    /// - returns: The created `DataRequest`.
+    public var request: DataRequest {
+        return RestofireRequest.dataRequest(fromRequestable: self, withUrlRequest: urlRequest)
+    }
     
     /// `Does Nothing`
     func request(_ request: RequestOperation<Self>, didCompleteWithValue value: Response) {}

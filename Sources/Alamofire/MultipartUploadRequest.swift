@@ -28,7 +28,7 @@ class MultipartUploadRequest {
     
     let queue = DispatchQueue(label: "org.alamofire.session-manager." + UUID().uuidString)
     
-    func request<R: AMultipartUploadable>(fromRequestable requestable: R, withUrlRequest urlRequest: URLRequest, encodingCompletion: ((RFMultipartFormDataEncodingResult) -> Void)? = nil) {
+    func request<R: MultipartUploadable>(fromRequestable requestable: R, withUrlRequest urlRequest: URLRequest, encodingCompletion: ((RFMultipartFormDataEncodingResult) -> Void)? = nil) {
         
         DispatchQueue.global(qos: .utility).async {
             let formData = MultipartFormData()
@@ -47,9 +47,9 @@ class MultipartUploadRequest {
                     
                     let upload: () -> UploadRequest = {
                         let request = requestable.sessionManager.upload(data, with: urlRequestWithContentType)
-                        RestofireRequest.didSend(request, requestable: requestable)
+                        RestofireRequest.didSendRequest(request, requestable: requestable)
                         RestofireRequest.authenticateRequest(request, usingCredential: requestable.credential)
-                        RestofireRequestValidation.validateDataRequest(
+                        RestofireUploadValidation.validateUploadRequest(
                             request: request,
                             requestable: requestable
                         )
@@ -89,9 +89,9 @@ class MultipartUploadRequest {
                     
                     let upload: () -> UploadRequest = {
                         let request = requestable.sessionManager.upload(fileURL, with: urlRequestWithContentType)
-                        RestofireRequest.didSend(request, requestable: requestable)
+                        RestofireRequest.didSendRequest(request, requestable: requestable)
                         RestofireRequest.authenticateRequest(request, usingCredential: requestable.credential)
-                        RestofireRequestValidation.validateDataRequest(
+                        RestofireUploadValidation.validateUploadRequest(
                             request: request,
                             requestable: requestable
                         )

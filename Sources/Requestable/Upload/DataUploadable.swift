@@ -2,17 +2,17 @@
 //  DataUploadable.swift
 //  Restofire
 //
-//  Created by Rahul Katariya on 27/01/18.
+//  Created by Rahul Katariya on 31/01/18.
 //  Copyright © 2018 AarKay. All rights reserved.
 //
 
 import Foundation
 
-/// Represents a `DataUploadable` for Alamofire.
+/// Represents a `DataUploadable` for Restofire.
 ///
 /// ### Create custom DataUploadable
 /// ```swift
-/// protocol HTTPBinUploadService: ADataUploadable {
+/// protocol HTTPBinUploadService: DataUploadable {
 ///
 ///     var path: String? = "post"
 ///     var data: Data = {
@@ -22,14 +22,14 @@ import Foundation
 ///
 /// }
 /// ```
-public protocol ADataUploadable: _AUploadable {
+public protocol DataUploadable: Uploadable {
     
     /// The data.
     var data: Data { get }
     
 }
 
-public extension ADataUploadable {
+public extension DataUploadable {
     
     /// Creates a `UploadRequest` to retrieve the contents of a URL based on the specified `Requestable`
     ///

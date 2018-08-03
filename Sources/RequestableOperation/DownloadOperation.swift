@@ -31,19 +31,41 @@ public class DownloadOperation<R: Downloadable>: AOperation<R> {
     
     override func handleDownloadResponse(_ response: DefaultDownloadResponse) {
         let request = self.request as! DownloadRequest
-        request.response(
-            queue: downloadable.queue,
-            responseSerializer: downloadable.responseSerializer
-        ) { ( response: (DownloadResponse<R.Response>)) in
-            self.completionHandler?(response)
-            if let error = response.error {
-                self.downloadable.request(self, didFailWithError: error)
-                self.isFinished = true
-            } else {
-                self.downloadable.request(self, didCompleteWithValue: response.value!)
-                self.isFinished = true
-            }
+        var res = response
+        
+        downloadable.delegates.forEach {
+            res = $0.process(request, requestable: downloadable, response: res)
         }
+        res = downloadable.process(request, requestable: downloadable, response: res)
+        
+        let result = downloadable.responseSerializer.serializeResponse(
+            res.request,
+            res.response,
+            res.temporaryURL,
+            res.error
+        )
+        
+        let downloadResponse = DownloadResponse<R.Response>(
+            request: res.request,
+            response: res.response,
+            temporaryURL: res.temporaryURL,
+            destinationURL: res.destinationURL,
+            resumeData: res.resumeData,
+            result: result
+        )
+        
+        downloadable.queue.async {
+            self.completionHandler?(downloadResponse)
+        }
+        
+        if let error = res.error {
+            self.downloadable.request(self, didFailWithError: error)
+        } else {
+            self.downloadable.request(self, didCompleteWithValue: downloadResponse.value!)
+        }
+        
+        self.isFinished = true
+        
     }
     
     /// Creates a copy of self

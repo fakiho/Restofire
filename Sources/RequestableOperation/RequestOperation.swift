@@ -31,19 +31,38 @@ public class RequestOperation<R: Requestable>: AOperation<R> {
     
     override func handleDataResponse(_ response: DefaultDataResponse) {
         let request = self.request as! DataRequest
-        request.response(
-            queue: requestable.queue,
-            responseSerializer: requestable.responseSerializer
-        ) { ( response: (DataResponse<R.Response>)) in
-            self.completionHandler?(response)
-            if let error = response.error {
-                self.requestable.request(self, didFailWithError: error)
-                self.isFinished = true
-            } else {
-                self.requestable.request(self, didCompleteWithValue: response.value!)
-                self.isFinished = true
-            }
+        
+        var res = response
+        requestable.delegates.forEach {
+            res = $0.process(request, requestable: requestable, response: res)
         }
+        res = requestable.process(request, requestable: requestable, response: res)
+        
+        let result = requestable.responseSerializer.serializeResponse(
+            res.request,
+            res.response,
+            res.data,
+            res.error
+        )
+        
+        let dataResponse = DataResponse<R.Response>(
+            request: res.request,
+            response: res.response,
+            data: res.data,
+            result: result
+        )
+        
+        requestable.queue.async {
+            self.completionHandler?(dataResponse)
+        }
+        
+        if let error = res.error {
+            self.requestable.request(self, didFailWithError: error)
+        } else {
+            self.requestable.request(self, didCompleteWithValue: dataResponse.value!)
+        }
+        
+        self.isFinished = true
     }
     
     /// Creates a copy of self

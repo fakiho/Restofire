@@ -2,31 +2,31 @@
 //  FileUploadable.swift
 //  Restofire
 //
-//  Created by Rahul Katariya on 27/01/18.
+//  Created by Rahul Katariya on 31/01/18.
 //  Copyright © 2018 AarKay. All rights reserved.
 //
 
 import Foundation
 
-/// Represents a `FileUploadable` for Alamofire.
+/// Represents a `FileUploadable` for Restofire.
 ///
 /// ### Create custom FileUploadable
 /// ```swift
-/// protocol HTTPBinUploadService: AFileUploadable {
+/// protocol HTTPBinUploadService: FileUploadable {
 ///
 ///     var path: String? = "post"
 ///     let url: URL = FileManager.url(forResource: "rainbow", withExtension: "jpg")
 ///
 /// }
 /// ```
-public protocol AFileUploadable: _AUploadable {
+public protocol FileUploadable: Uploadable {
     
     /// The url.
     var url: URL { get }
     
 }
 
-public extension AFileUploadable {
+public extension FileUploadable {
     
     /// Creates a `UploadRequest` to retrieve the contents of a URL based on the specified `Requestable`
     ///

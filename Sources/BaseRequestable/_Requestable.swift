@@ -18,16 +18,13 @@ import Foundation
 ///
 /// }
 /// ```
-public protocol _Requestable: _Configurable, RequestDelegate {
+public protocol _Requestable: _Configurable {
     
     /// The unique id given to requestable
     var uuid: String? { get }
     
     /// The path relative to base URL.
     var path: String? { get }
-    
-    /// The request delegates.
-    var delegates: [RequestDelegate] { get }
     
 }
 
@@ -43,11 +40,6 @@ public extension _Requestable {
         return nil
     }
     
-    /// `empty`
-    public var delegates: [RequestDelegate] {
-        return configuration.requestDelegates
-    }
-    
 }
 
 // MARK: - URL Request
@@ -55,7 +47,7 @@ public extension _Requestable {
     
     public var urlRequest: URLRequest {
         let url = [scheme + host, version, path]
-            .flatMap { $0 }
+            .compactMap { $0 }
             .joined(separator: "/")
         
         let allHeaders = headers + configuration.headers

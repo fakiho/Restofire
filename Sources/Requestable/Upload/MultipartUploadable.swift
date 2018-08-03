@@ -2,17 +2,17 @@
 //  MultipartUploadable.swift
 //  Restofire
 //
-//  Created by Rahul Katariya on 27/01/18.
+//  Created by Rahul Katariya on 31/01/18.
 //  Copyright © 2018 AarKay. All rights reserved.
 //
 
 import Foundation
 
-/// Represents a `MultipartUploadable` for Alamofire.
+/// Represents a `MultipartUploadable` for Restofire.
 ///
 /// ### Create custom MultipartUploadable
 /// ```swift
-/// protocol HTTPBinUploadService: AMultipartUploadable {
+/// protocol HTTPBinUploadService: MultipartUploadable {
 ///
 ///     var path: String? = "post"
 ///     var multipartFormData: (MultipartFormData) -> Void = { multipartFormData in
@@ -22,17 +22,17 @@ import Foundation
 ///
 /// }
 /// ```
-public protocol AMultipartUploadable: _AUploadable {
+public protocol MultipartUploadable: Uploadable {
     
     /// The multipart form data.
     var multipartFormData: (MultipartFormData) -> Void { get }
     
     /// The encoding memory threashold.
     var encodingMemoryThreshold: UInt64 { get }
-
+    
 }
 
-extension AMultipartUploadable {
+extension MultipartUploadable {
     
     /// `SessionManager.multipartFormDataEncodingMemoryThreshold`
     public var encodingMemoryThreshold: UInt64 {
@@ -41,7 +41,7 @@ extension AMultipartUploadable {
     
 }
 
-public extension AMultipartUploadable {
+public extension MultipartUploadable {
     
     /// Use request(encodingCompletion:) method for MultipartUpload instead
     public var request: UploadRequest {

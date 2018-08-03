@@ -10,9 +10,9 @@ import Foundation
 
 class RestofireRequestValidation {
     
-    static func validateDataRequest(request: DataRequest, requestable: ARequestable) {
-        validateDataRequest(request, forAcceptableContentTypes: requestable.acceptableContentTypes)
-        validateDataRequest(request, forAcceptableStatusCodes: requestable.acceptableStatusCodes)
+    static func validateDataRequest<R: Requestable>(request: DataRequest, requestable: R) {
+        validateDataRequest(request, forAcceptableContentTypes: requestable.validation.acceptableContentTypes)
+        validateDataRequest(request, forAcceptableStatusCodes: requestable.validation.acceptableStatusCodes)
         validateDataRequest(request, forValidation: requestable.validationBlock)
     }
     
@@ -35,7 +35,7 @@ class RestofireRequestValidation {
 
 class RestofireDownloadValidation {
     
-    static func validateDownloadRequest(request: DownloadRequest, requestable: ADownloadable) {
+    static func validateDownloadRequest<R: Downloadable>(request: DownloadRequest, requestable: R) {
         validateDownloadRequest(request, forAcceptableContentTypes: requestable.acceptableContentTypes)
         validateDownloadRequest(request, forAcceptableStatusCodes: requestable.acceptableStatusCodes)
         validateDownloadRequest(request, forValidation: requestable.validationBlock)
@@ -52,6 +52,31 @@ class RestofireDownloadValidation {
     }
     
     static func validateDownloadRequest(_ request: DownloadRequest, forValidation validation:DownloadRequest.Validation?) {
+        guard let validation = validation else { return }
+        request.validate(validation)
+    }
+    
+}
+
+class RestofireUploadValidation {
+    
+    static func validateUploadRequest<R: Uploadable>(request: UploadRequest, requestable: R) {
+        validateUploadRequest(request, forAcceptableContentTypes: requestable.acceptableContentTypes)
+        validateUploadRequest(request, forAcceptableStatusCodes: requestable.acceptableStatusCodes)
+        validateUploadRequest(request, forValidation: requestable.validationBlock)
+    }
+    
+    static func validateUploadRequest(_ request: UploadRequest, forAcceptableContentTypes contentTypes:[String]?) {
+        guard let contentTypes = contentTypes else { return }
+        request.validate(contentType: contentTypes)
+    }
+    
+    static func validateUploadRequest(_ request: UploadRequest, forAcceptableStatusCodes statusCodes:[Int]?) {
+        guard let statusCodes = statusCodes else { return }
+        request.validate(statusCode: statusCodes)
+    }
+    
+    static func validateUploadRequest(_ request: UploadRequest, forValidation validation:DataRequest.Validation?) {
         guard let validation = validation else { return }
         request.validate(validation)
     }

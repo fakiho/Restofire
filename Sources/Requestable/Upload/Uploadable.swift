@@ -12,7 +12,13 @@ import Foundation
 ///
 /// Instead implement FileUploadable, DataUploadable, StreamUploadable,
 /// MultipartUplodable protocols.
-public protocol Uploadable: _AUploadable, Configurable, DataResponseSerializable {
+public protocol Uploadable: BaseRequestable, DataResponseSerializable {
+
+    /// The uplaod request for subclasses to provide the implementation.
+    var request: UploadRequest { get }
+    
+    /// The Alamofire data request validation.
+    var validationBlock: DataRequest.Validation? { get }
     
     /// Called when the Request succeeds.
     ///
@@ -29,6 +35,16 @@ public protocol Uploadable: _AUploadable, Configurable, DataResponseSerializable
 }
 
 public extension Uploadable {
+    
+    /// `.post`
+    public var method: HTTPMethod {
+        return .post
+    }
+    
+    /// `Validation.default.dataValidation`
+    public var validationBlock: DataRequest.Validation? {
+        return validation.dataValidation
+    }
     
     /// `Does Nothing`
     func request(_ request: UploadOperation<Self>, didCompleteWithValue value: Response) {}

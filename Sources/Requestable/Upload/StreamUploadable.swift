@@ -2,31 +2,31 @@
 //  StreamUploadable.swift
 //  Restofire
 //
-//  Created by Rahul Katariya on 27/01/18.
+//  Created by Rahul Katariya on 31/01/18.
 //  Copyright © 2018 AarKay. All rights reserved.
 //
 
 import Foundation
 
-/// Represents a `StreamUploadable` for Alamofire.
+/// Represents a `StreamUploadable` for Restofire.
 ///
 /// ### Create custom StreamUploadable
 /// ```swift
-/// protocol HTTPBinUploadService: AStreamUploadable {
+/// protocol HTTPBinUploadService: StreamUploadable {
 ///
 ///     var path: String? = "post"
 ///     var stream: InputStream = InputStream(url: FileManager.imageURL)!
 ///
 /// }
 /// ```
-public protocol AStreamUploadable: _AUploadable {
+public protocol StreamUploadable: Uploadable {
     
     /// The stream.
     var stream: InputStream { get }
-
+    
 }
 
-public extension AStreamUploadable {
+public extension StreamUploadable {
     
     /// Creates a `UploadRequest` to retrieve the contents of a URL based on the specified `Requestable`
     ///

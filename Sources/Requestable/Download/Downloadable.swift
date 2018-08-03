@@ -22,8 +22,14 @@ import Foundation
 ///
 /// }
 /// ```
-public protocol Downloadable: ADownloadable, Configurable, DownloadResponseSerializable {
+public protocol Downloadable: BaseDownloadable, DownloadResponseSerializable {
 
+    /// The download file destination
+    var destination: DownloadFileDestination? { get }
+    
+    /// The Alamofire data request validation.
+    var validationBlock: DownloadRequest.Validation? { get }
+    
     /// Called when the Request succeeds.
     ///
     /// - parameter request: The Alamofire.DownloadRequest
@@ -39,6 +45,25 @@ public protocol Downloadable: ADownloadable, Configurable, DownloadResponseSeria
 }
 
 public extension Downloadable {
+    
+    /// `nil`
+    public var destination: DownloadFileDestination? {
+        return nil
+    }
+    
+    /// `Validation.default.downloadValidation`
+    public var validationBlock: DownloadRequest.Validation? {
+        return validation.downloadValidation
+    }
+    
+    /// Creates a `DownloadRequest` to retrieve the contents of a URL based on the specified `Requestable`
+    ///
+    /// If `startRequestsImmediately` is `true`, the request will have `resume()` called before being returned.
+    ///
+    /// - returns: The created `DownloadRequest`.
+    public var request: DownloadRequest {
+        return RestofireRequest.downloadRequest(fromRequestable: self, withUrlRequest: urlRequest)
+    }
     
     /// `Does Nothing`
     func request(_ request: DownloadOperation<Self>, didCompleteWithValue value: Response) {}
