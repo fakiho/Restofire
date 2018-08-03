@@ -20,6 +20,9 @@ import Foundation
 /// ```
 public protocol _Requestable: _Configurable, RequestDelegate {
     
+    /// The unique id given to requestable
+    var uuid: String? { get }
+    
     /// The path relative to base URL.
     var path: String? { get }
     
@@ -29,6 +32,11 @@ public protocol _Requestable: _Configurable, RequestDelegate {
 }
 
 public extension _Requestable {
+    
+    /// `nil`
+    public var uuid: String? {
+        return nil
+    }
     
     /// `nil`
     public var path: String? {
