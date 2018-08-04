@@ -31,12 +31,11 @@ class RequestableSpec: BaseSpec {
                         typealias Response = HTTPBin
                         
                         var path: String? = "get"
-                        var responseSerializer: AnyResponseSerializer<HTTPBin> = AnyResponseSerializer<HTTPBin>.init(dataSerializer: { (request, response, data, error) -> HTTPBin in
-                            return try! JSONDecodableResponseSerializer()
-                                .serialize(request: request,
-                                           response: response,
-                                           data: data,
-                                           error: error)
+                        var responseSerializer: AnyResponseSerializer<Result<Response>> = AnyResponseSerializer<Result<Response>>.init(dataSerializer: { (request, response, data, error) -> Result<Response> in
+                            return Result { try JSONDecodableResponseSerializer().serialize(request: request,
+                                                                                            response: response,
+                                                                                            data: data,
+                                                                                            error: error)}
                         })
                         
                         func request(_ request: RequestOperation<Request>, didCompleteWithValue value: HTTPBin) {
