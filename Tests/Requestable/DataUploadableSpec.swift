@@ -25,7 +25,7 @@ class DataUploadableSpec: BaseSpec {
                 waitUntil(timeout: self.timeout) { done in
                     struct Upload: DataUploadable {
                         
-                        typealias Response = Data
+                        typealias SerializedObject = Data
                         var path: String? = "post"
                         var data: Data = {
                             return "Lorem ipsum dolor sit amet, consectetur adipiscing elit.".data(using: .utf8, allowLossyConversion: false)!

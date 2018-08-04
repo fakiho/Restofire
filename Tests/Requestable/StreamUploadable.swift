@@ -27,7 +27,7 @@ class StreamUploadableSpec: BaseSpec {
                 waitUntil(timeout: self.timeout) { done in
                     struct Upload: StreamUploadable {
                         
-                        typealias Response = Data
+                        typealias SerializedObject = Data
                         var path: String? = "post"
                         let stream: InputStream = InputStream(url: BaseSpec.url(forResource: "rainbow", withExtension: "jpg"))!
                         

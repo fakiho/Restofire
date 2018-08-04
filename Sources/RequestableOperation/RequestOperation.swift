@@ -14,7 +14,7 @@ public class RequestOperation<R: Requestable>: AOperation<R> {
     
     let requestable: R
     let dataRequest: () -> DataRequest
-    let completionHandler: ((DataResponse<R.Response>) -> Void)?
+    let completionHandler: ((DataResponse<R.SerializedObject>) -> Void)?
     
     /// Intializes an request operation.
     ///
@@ -23,7 +23,7 @@ public class RequestOperation<R: Requestable>: AOperation<R> {
     ///   - request: The request closure.
     ///   - completionHandler: The async completion handler called
     ///     when the request is completed
-    public init(requestable: R, request: @escaping () -> DataRequest, completionHandler: ((DataResponse<R.Response>) -> Void)?) {
+    public init(requestable: R, request: @escaping () -> DataRequest, completionHandler: ((DataResponse<R.SerializedObject>) -> Void)?) {
         self.requestable = requestable
         self.dataRequest = request
         self.completionHandler = completionHandler
@@ -39,13 +39,12 @@ public class RequestOperation<R: Requestable>: AOperation<R> {
         }
         res = requestable.process(request, requestable: requestable, response: res)
         
-        let result = Result { try requestable.responseSerializer
-            .serialize(request: res.request,
-                       response: res.response,
-                       data: res.data,
-                       error: res.error) }
+        let result = Result { try requestable.serialize(request: res.request,
+                                                        response: res.response,
+                                                        data: res.data,
+                                                        error: res.error) }
         
-        let dataResponse = DataResponse<R.Response>(
+        let dataResponse = DataResponse<R.SerializedObject>(
             request: res.request,
             response: res.response,
             data: res.data,

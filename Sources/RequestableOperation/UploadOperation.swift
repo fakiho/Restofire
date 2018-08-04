@@ -14,7 +14,7 @@ public class UploadOperation<R: Uploadable>: AOperation<R> {
     
     let uploadable: R
     let uploadRequest: () -> UploadRequest
-    let completionHandler: ((DataResponse<R.Response>) -> Void)?
+    let completionHandler: ((DataResponse<R.SerializedObject>) -> Void)?
     
     /// Intializes an upload operation.
     ///
@@ -23,7 +23,7 @@ public class UploadOperation<R: Uploadable>: AOperation<R> {
     ///   - request: The request closure.
     ///   - completionHandler: The async completion handler called
     ///     when the request is completed
-    public init(uploadable: R, request: @escaping () -> UploadRequest, completionHandler: ((DataResponse<R.Response>) -> Void)?) {
+    public init(uploadable: R, request: @escaping () -> UploadRequest, completionHandler: ((DataResponse<R.SerializedObject>) -> Void)?) {
         self.uploadable = uploadable
         self.uploadRequest = request
         self.completionHandler = completionHandler
@@ -39,14 +39,13 @@ public class UploadOperation<R: Uploadable>: AOperation<R> {
         }
         res = uploadable.process(request, requestable: uploadable, response: res)
         
-        let result = Result { try uploadable.responseSerializer
-            .serialize(request: res.request,
-                       response: res.response,
-                       data: res.data,
-                       error: res.error)
+        let result = Result { try uploadable.serialize(request: res.request,
+                                                       response: res.response,
+                                                       data: res.data,
+                                                       error: res.error)
         }
         
-        let dataResponse = DataResponse<R.Response>(
+        let dataResponse = DataResponse<R.SerializedObject>(
             request: res.request,
             response: res.response,
             data: res.data,

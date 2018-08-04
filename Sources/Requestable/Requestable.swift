@@ -19,13 +19,13 @@ import Alamofire
 ///
 /// }
 /// ```
-public protocol Requestable: ARequestable, Configurable, ResponseSerializable {
+public protocol Requestable: ARequestable, Configurable, ResponseSerializer {
 
     /// Called when the Request succeeds.
     ///
     /// - parameter request: The Alamofire.DataRequest
     /// - parameter error: The Response
-    func request(_ request: RequestOperation<Self>, didCompleteWithValue value: Response)
+    func request(_ request: RequestOperation<Self>, didCompleteWithValue value: SerializedObject)
     
     /// Called when the Request fails.
     ///
@@ -38,7 +38,7 @@ public protocol Requestable: ARequestable, Configurable, ResponseSerializable {
 public extension Requestable {
     
     /// `Does Nothing`
-    func request(_ request: RequestOperation<Self>, didCompleteWithValue value: Response) {}
+    func request(_ request: RequestOperation<Self>, didCompleteWithValue value: SerializedObject) {}
     
     /// `Does Nothing`
     func request(_ request: RequestOperation<Self>, didFailWithError error: Error) {}
@@ -51,7 +51,7 @@ public extension Requestable {
     ///
     /// - returns: The created `RequestOperation`.
     @discardableResult
-    public func execute(completionHandler: ((DataResponse<Response>) -> Void)? = nil) -> RequestOperation<Self> {
+    public func execute(completionHandler: ((DataResponse<SerializedObject>) -> Void)? = nil) -> RequestOperation<Self> {
         return execute(request: self.request, completionHandler: completionHandler)
     }
     
@@ -64,7 +64,7 @@ public extension Requestable {
     ///
     /// - returns: The created `RequestOperation`.
     @discardableResult
-    public func execute(request: @autoclosure @escaping () -> DataRequest, completionHandler: ((DataResponse<Response>) -> Void)? = nil) -> RequestOperation<Self> {
+    public func execute(request: @autoclosure @escaping () -> DataRequest, completionHandler: ((DataResponse<SerializedObject>) -> Void)? = nil) -> RequestOperation<Self> {
         let requestOperation = RequestOperation(requestable: self, request: request, completionHandler: completionHandler)
         requestOperation.start()
         return requestOperation

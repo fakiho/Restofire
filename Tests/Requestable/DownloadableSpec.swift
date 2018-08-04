@@ -28,7 +28,7 @@ class DownloadableSpec: BaseSpec {
                 
                 waitUntil(timeout: self.timeout) { done in
                     struct Request: Downloadable {
-                        typealias Response = HTTPBin
+                        typealias SerializedObject = HTTPBin
                         
                         var path: String? = "get"
                         var destination: DownloadRequest.Destination? = { _, _ in (BaseSpec.jsonFileURL, []) }

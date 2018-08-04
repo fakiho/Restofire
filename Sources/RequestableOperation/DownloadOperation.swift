@@ -14,7 +14,7 @@ public class DownloadOperation<R: Downloadable>: AOperation<R> {
     
     let downloadable: R
     let downloadRequest: () -> DownloadRequest
-    let completionHandler: ((DownloadResponse<R.Response>) -> Void)?
+    let completionHandler: ((DownloadResponse<R.SerializedObject>) -> Void)?
     
     /// Intializes an download operation.
     ///
@@ -23,7 +23,7 @@ public class DownloadOperation<R: Downloadable>: AOperation<R> {
     ///   - request: The request closure.
     ///   - completionHandler: The async completion handler called
     ///     when the request is completed
-    public init(downloadable: R, request: @escaping (() -> DownloadRequest), completionHandler: ((DownloadResponse<R.Response>) -> Void)?) {
+    public init(downloadable: R, request: @escaping (() -> DownloadRequest), completionHandler: ((DownloadResponse<R.SerializedObject>) -> Void)?) {
         self.downloadable = downloadable
         self.downloadRequest = request
         self.completionHandler = completionHandler
@@ -39,14 +39,13 @@ public class DownloadOperation<R: Downloadable>: AOperation<R> {
         }
         res = downloadable.process(request, requestable: downloadable, response: res)
         
-        let result = Result { try downloadable.responseSerializer
-            .serializeDownload(request: res.request,
-                               response: res.response,
-                               fileURL: res.fileURL,
-                               error: res.error)
+        let result = Result { try downloadable.serializeDownload(request: res.request,
+                                                                 response: res.response,
+                                                                 fileURL: res.fileURL,
+                                                                 error: res.error)
         }
         
-        let downloadResponse = DownloadResponse<R.Response>(
+        let downloadResponse = DownloadResponse<R.SerializedObject>(
             request: res.request,
             response: res.response,
             fileURL: res.fileURL,

@@ -49,7 +49,7 @@ class ConfigurationSpec: BaseSpec {
             it("should use global configuration") {
                 // Given
                 struct Service: Requestable {
-                    typealias Response = Data
+                    typealias SerializedObject = Data
                     var path: String? = "get"
                 }
                 
@@ -63,7 +63,7 @@ class ConfigurationSpec: BaseSpec {
             it("should apply group configuration") {
                 // Given
                 struct Service: MockyRequestable {
-                    typealias Response = Data
+                    typealias SerializedObject = Data
                     var path: String? = "get"
                 }
                 
@@ -77,7 +77,7 @@ class ConfigurationSpec: BaseSpec {
             it("should apply request configuration") {
                 // Given
                 struct Service: MockyRequestable, MockyRetryable {
-                    typealias Response = Data
+                    typealias SerializedObject = Data
                     var scheme: String = "https://"
                     var path: String? = "get"
                 }

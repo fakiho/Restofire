@@ -13,13 +13,13 @@ import Alamofire
 ///
 /// Instead implement FileUploadable, DataUploadable, StreamUploadable,
 /// MultipartUplodable protocols.
-public protocol Uploadable: _AUploadable, Configurable, ResponseSerializable {
+public protocol Uploadable: _AUploadable, Configurable, ResponseSerializer {
 
     /// Called when the Request succeeds.
     ///
     /// - parameter request: The Alamofire.UploadRequest
     /// - parameter value: The Response
-    func request(_ request: UploadOperation<Self>, didCompleteWithValue value: Response)
+    func request(_ request: UploadOperation<Self>, didCompleteWithValue value: SerializedObject)
     
     /// Called when the Request fails
     ///
@@ -32,7 +32,7 @@ public protocol Uploadable: _AUploadable, Configurable, ResponseSerializable {
 public extension Uploadable {
 
     /// `Does Nothing`
-    func request(_ request: UploadOperation<Self>, didCompleteWithValue value: Response) {}
+    func request(_ request: UploadOperation<Self>, didCompleteWithValue value: SerializedObject) {}
     
     /// `Does Nothing`
     func request(_ request: UploadOperation<Self>, didFailWithError error: Error) {}
@@ -45,7 +45,7 @@ public extension Uploadable {
     ///
     /// - returns: The created `UploadOperation`.
     @discardableResult
-    public func execute(completionHandler: ((DataResponse<Response>) -> Void)? = nil) -> UploadOperation<Self> {
+    public func execute(completionHandler: ((DataResponse<SerializedObject>) -> Void)? = nil) -> UploadOperation<Self> {
         return execute(request: self.request, completionHandler: completionHandler)
     }
     
@@ -58,7 +58,7 @@ public extension Uploadable {
     ///
     /// - returns: The created `UploadOperation`.
     @discardableResult
-    public func execute(request: @autoclosure @escaping () -> UploadRequest, completionHandler: ((DataResponse<Response>) -> Void)? = nil) -> UploadOperation<Self> {
+    public func execute(request: @autoclosure @escaping () -> UploadRequest, completionHandler: ((DataResponse<SerializedObject>) -> Void)? = nil) -> UploadOperation<Self> {
         let uploadOperation = UploadOperation(uploadable: self, request: request, completionHandler: completionHandler)
         uploadOperation.start()
         return uploadOperation

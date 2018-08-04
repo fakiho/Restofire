@@ -1,5 +1,5 @@
 //
-//  ResponseSerializable.swift
+//  ResponseSerializer.swift
 //  Restofire
 //
 //  Created by Rahul Katariya on 29/01/18.
@@ -9,50 +9,15 @@
 import Foundation
 import Alamofire
 
-public protocol _ResponseSerializable {
-    
-    /// The response type.
-    associatedtype Response
-    
-    /// The keypath.
-    var keypath: String? { get }
-    
-    /// context.
-    var context: [String: Any]? { get }
-    
-}
-
-extension _ResponseSerializable {
-    
-    /// `nil`
-    public var keypath: String? {
-        return nil
-    }
-    
-    /// `nil`
-    public var context: [String: Any]? {
-        return nil
-    }
-    
-}
-
 /// Represents a `Alamofire.DataResponseSerializer` that is associated with `Requestable`.
-public protocol ResponseSerializable: _ResponseSerializable {
+public extension ResponseSerializer where SerializedObject == Data {
     
-    /// The data response serializer.
-    var responseSerializer: AnyResponseSerializer<Response> { get }
+    public func serialize(request: URLRequest?, response: HTTPURLResponse?, data: Data?, error: Error?) throws -> SerializedObject {
+        return try DataResponseSerializer().serialize(request: request, response: response, data: data, error: error)
+    }
     
-}
-
-public extension ResponseSerializable where Response == Data {
-    
-    /// `Alamofire.DataRequest.dataResponseSerializer()`
-    public var responseSerializer: AnyResponseSerializer<Response> {
-        return AnyResponseSerializer<Data>.init(dataSerializer: { (request, response, data, error) -> Data in
-            return try! DataResponseSerializer().serialize(
-                request: request, response: response, data: data, error: error
-            )
-        })
+    public func serializeDownload(request: URLRequest?, response: HTTPURLResponse?, fileURL: URL?, error: Error?) throws -> SerializedObject {
+        return try DataResponseSerializer().serializeDownload(request: request, response: response, fileURL: fileURL, error: error)
     }
     
 }

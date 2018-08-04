@@ -23,13 +23,13 @@ import Alamofire
 ///
 /// }
 /// ```
-public protocol Downloadable: ADownloadable, Configurable, ResponseSerializable {
+public protocol Downloadable: ADownloadable, Configurable, ResponseSerializer {
 
     /// Called when the Request succeeds.
     ///
     /// - parameter request: The Alamofire.DownloadRequest
     /// - parameter value: The Response
-    func request(_ request: DownloadOperation<Self>, didCompleteWithValue value: Response)
+    func request(_ request: DownloadOperation<Self>, didCompleteWithValue value: SerializedObject)
     
     /// Called when the Request fails
     ///
@@ -42,7 +42,7 @@ public protocol Downloadable: ADownloadable, Configurable, ResponseSerializable 
 public extension Downloadable {
     
     /// `Does Nothing`
-    func request(_ request: DownloadOperation<Self>, didCompleteWithValue value: Response) {}
+    func request(_ request: DownloadOperation<Self>, didCompleteWithValue value: SerializedObject) {}
     
     /// `Does Nothing`
     func request(_ request: DownloadOperation<Self>, didFailWithError error: Error) {}
@@ -55,7 +55,7 @@ public extension Downloadable {
     ///
     /// - returns: The created `DownloadOperation`.
     @discardableResult
-    public func execute(completionHandler: ((DownloadResponse<Response>) -> Void)? = nil) -> DownloadOperation<Self> {
+    public func execute(completionHandler: ((DownloadResponse<SerializedObject>) -> Void)? = nil) -> DownloadOperation<Self> {
         return execute(request: self.request, completionHandler: completionHandler)
     }
     
@@ -68,7 +68,7 @@ public extension Downloadable {
     ///
     /// - returns: The created `DownloadOperation`.
     @discardableResult
-    public func execute(request: @autoclosure @escaping () -> DownloadRequest, completionHandler: ((DownloadResponse<Response>) -> Void)? = nil) -> DownloadOperation<Self> {
+    public func execute(request: @autoclosure @escaping () -> DownloadRequest, completionHandler: ((DownloadResponse<SerializedObject>) -> Void)? = nil) -> DownloadOperation<Self> {
         let downloadOperation = DownloadOperation(downloadable: self, request: request, completionHandler: completionHandler)
         downloadOperation.start()
         return downloadOperation

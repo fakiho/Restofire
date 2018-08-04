@@ -28,7 +28,7 @@ class RequestableSpec: BaseSpec {
                 
                 waitUntil(timeout: self.timeout) { done in
                     struct Request: Requestable {
-                        typealias Response = HTTPBin
+                        typealias SerializedObject = HTTPBin
                         
                         var path: String? = "get"
                         var responseSerializer: AnyResponseSerializer<HTTPBin> = AnyResponseSerializer<HTTPBin>.init(dataSerializer: { (request, response, data, error) -> HTTPBin in

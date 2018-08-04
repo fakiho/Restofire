@@ -25,7 +25,7 @@ class FileUploadableSpec: BaseSpec {
                 waitUntil(timeout: self.timeout) { done in
                     struct Upload: FileUploadable {
                         
-                        typealias Response = Data
+                        typealias SerializedObject = Data
                         var path: String? = "post"
                         let url: URL = BaseSpec.url(forResource: "rainbow", withExtension: "jpg")
                         

@@ -33,7 +33,7 @@ class MultipartUploadableSpec: BaseSpec {
                     }
                     
                     struct Upload: MultipartUploadable {
-                        typealias Response = HTTPBin
+                        typealias SerializedObject = HTTPBin
                         var path: String? = "post"
                         var multipartFormData: (MultipartFormData) -> Void = { multipartFormData in
                             multipartFormData.append("français".data(using: .utf8, allowLossyConversion: false)!, withName: "french")
